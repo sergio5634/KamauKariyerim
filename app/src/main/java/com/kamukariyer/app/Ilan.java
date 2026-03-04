@@ -15,6 +15,7 @@ public class Ilan implements Serializable {
     private String tecrubeSarti;
     private int yasSarti;
     private String cinsiyetSarti;
+    private String ikametSarti; // YENİ: İkamet şartı (örn: "İstanbul, Ankara")
     private String aciklama;
     private String basvuruLinki;
     private boolean yeniIlan;
@@ -58,6 +59,10 @@ public class Ilan implements Serializable {
 
     public String getCinsiyetSarti() { return cinsiyetSarti; }
     public void setCinsiyetSarti(String cinsiyetSarti) { this.cinsiyetSarti = cinsiyetSarti; }
+
+    // YENİ: İkamet şartı getter/setter
+    public String getIkametSarti() { return ikametSarti; }
+    public void setIkametSarti(String ikametSarti) { this.ikametSarti = ikametSarti; }
 
     public String getAciklama() { return aciklama; }
     public void setAciklama(String aciklama) { this.aciklama = aciklama; }
