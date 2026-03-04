@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KamuKariyerim</string>
+    <string name="hint_bolum">Bölüm adı yazın...</string>
+    <string name="hint_kpss">Örn: 85.5</string>
+    <string name="btn_kaydet">PROFİLİ KAYDET</string>
+    <string name="title_favoriler">Favoriler</string>
+    <string name="title_profil">Profil</string>
+    <string name="title_anasayfa">Ana Sayfa</string>
+</resources>
