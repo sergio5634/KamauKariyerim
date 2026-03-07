@@ -1,303 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4F8"
-    android:fillViewport="true">
+    android:background="#F8FAFC">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:background="#FFFFFF">
 
-        <!-- Başlık -->
-        <TextView
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Profil Bilgilerim"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#1565C0"
-            android:gravity="center"
-            android:padding="16dp"/>
+            android:layout_height="?attr/actionBarSize"
+            app:title="Profil"
+            app:titleTextColor="#1E293B" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Bölüm Seçimi -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mezun Olduğunuz Bölüm *"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteBolum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Bölüm adı yazın..."
-            android:background="@android:drawable/edit_text"
-            android:padding="12dp"
-            android:textColor="#333333"/>
-
-        <!-- Yaş -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Yaşınız *"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <EditText
-            android:id="@+id/etYas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Örn: 25"
-            android:inputType="number"
-            android:background="@android:drawable/edit_text"
-            android:padding="12dp"/>
-
-        <!-- KPSS Puanı -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="KPSS Puanınız *"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <EditText
-            android:id="@+id/etKpssPuani"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Örn: 85.5"
-            android:inputType="numberDecimal"
-            android:background="@android:drawable/edit_text"
-            android:padding="12dp"/>
-
-        <!-- Cinsiyet -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cinsiyetiniz"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <RadioGroup
-            android:id="@+id/rgCinsiyet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbFarketmez"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Farketmez"
-                android:checked="true"/>
-
-            <RadioButton
-                android:id="@+id/rbErkek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Erkek"
-                android:layout_marginStart="16dp"/>
-
-            <RadioButton
-                android:id="@+id/rbKadin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kadın"
-                android:layout_marginStart="16dp"/>
-        </RadioGroup>
-
-        <!-- Ehliyet -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ehliyet Durumu"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <RadioGroup
-            android:id="@+id/rgEhliyet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbEhliyetYok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Yok"
-                android:checked="true"/>
-
-            <RadioButton
-                android:id="@+id/rbEhliyetB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="B Sınıfı"
-                android:layout_marginStart="16dp"/>
-
-            <RadioButton
-                android:id="@+id/rbEhliyetC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="C ve Üzeri"
-                android:layout_marginStart="16dp"/>
-        </RadioGroup>
-
-        <!-- Ek Bilgiler -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ek Bilgiler"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="24dp"/>
-
-        <!-- Engel Durumu -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="12dp"
-            android:padding="12dp"
-            android:background="#FFFFFF">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="0dp"
+            <!-- Kişisel Bilgiler Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Engel Durumu"/>
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
 
-            <Switch
-                android:id="@+id/switchEngel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-        <!-- Güvenlik Kartı -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:padding="12dp"
-            android:background="#FFFFFF">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👤 Kişisel Bilgiler"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2563EB"
+                        android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="0dp"
+                    <!-- Takma Ad -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Takma Ad"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etTakmaAd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="İpucu: Takma ad kullanabilirsiniz, gerçek adınız gerekmez."
+                        android:textSize="12sp"
+                        android:textColor="#64748B"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Yaş -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Yaş"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etYas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Cinsiyet ve İl -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Cinsiyet"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_marginEnd="8dp">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerCinsiyet"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="İl"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_marginStart="8dp">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerIl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Eğitim Bilgileri Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Güvenlik Kartı"/>
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
 
-            <Switch
-                android:id="@+id/switchGuvenlikKarti"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎓 Eğitim Bilgileri"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2563EB"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Eğitim Seviyesi -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Eğitim Seviyesi"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_marginBottom="12dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerEgitimSeviyesi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Bölüm -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Bölüm"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerBolum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- KPSS Bilgileri Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏆 KPSS Bilgileri"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#D97706"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- KPSS Türü -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="KPSS Puan Türü"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_marginBottom="12dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerKpssTuru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- KPSS Puanı -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutKpssPuani"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="KPSS Puanı"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etKpssPuani"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Ek Bilgiler Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📋 Ek Bilgiler"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#DC2626"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Ehliyet -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ehliyet"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_marginBottom="16dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerEhliyet"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Engel Durumu -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Engelli Durumu"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Engel durumu varsa işaretleyin"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchEngel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <!-- Güvenlik Kartı -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="8dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Güvenlik Kartı"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Özel güvenlik kartınız varsa işaretleyin"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchGuvenlikKarti"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Kaydet Butonu -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnProfiliKaydet"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="✓ PROFİLİ KAYDET"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp" />
+
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- Şehirler Başlık -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="İkamet Şehirleri (İsteğe Bağlı)"
-            android:textColor="#1565C0"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
-
-        <!-- 1. Şehir -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1. Şehir"
-            android:layout_marginTop="8dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerSehir1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvIlceLabel1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="İlçe"
-            android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerIlce1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <!-- 2. Şehir -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2. Şehir"
-            android:layout_marginTop="8dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerSehir2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvIlceLabel2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="İlçe"
-            android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerIlce2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <!-- 3. Şehir -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="3. Şehir"
-            android:layout_marginTop="8dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerSehir3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvIlceLabel3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="İlçe"
-            android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerIlce3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <!-- Kaydet Butonu -->
-        <Button
-            android:id="@+id/btnKaydet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PROFİLİ KAYDET"
-            android:backgroundTint="#1565C0"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"/>
-
-    </LinearLayout>
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
