@@ -1,58 +1,292 @@
-<Spinner
-                        android:id="@+id/spinnerIlce2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:visibility="gone"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F4F8"
+    android:fillViewport="true">
 
-            <!-- 3. Şehir -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Başlık -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profil Bilgilerim"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1565C0"
+            android:gravity="center"
+            android:padding="16dp"/>
+
+        <!-- Bölüm Seçimi -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mezun Olduğunuz Bölüm *"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteBolum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Bölüm adı yazın..."
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"
+            android:textColor="#333333"/>
+
+        <!-- Yaş -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yaşınız *"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/etYas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Örn: 25"
+            android:inputType="number"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"/>
+
+        <!-- KPSS Puanı -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KPSS Puanınız *"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/etKpssPuani"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Örn: 85.5"
+            android:inputType="numberDecimal"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"/>
+
+        <!-- Cinsiyet -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cinsiyetiniz"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgCinsiyet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbFarketmez"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                android:text="Farketmez"
+                android:checked="true"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+            <RadioButton
+                android:id="@+id/rbErkek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Erkek"
+                android:layout_marginStart="16dp"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="3. Şehir"
-                        android:textColor="#1565C0"
-                        android:textStyle="bold"/>
+            <RadioButton
+                android:id="@+id/rbKadin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kadın"
+                android:layout_marginStart="16dp"/>
+        </RadioGroup>
 
-                    <Spinner
-                        android:id="@+id/spinnerSehir3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"/>
+        <!-- Ehliyet -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ehliyet Durumu"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
 
-                    <TextView
-                        android:id="@+id/tvIlceLabel3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="İlçe"
-                        android:textColor="#555555"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone"/>
+        <RadioGroup
+            android:id="@+id/rgEhliyet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-                    <Spinner
-                        android:id="@+id/spinnerIlce3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:visibility="gone"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <RadioButton
+                android:id="@+id/rbEhliyetYok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yok"
+                android:checked="true"/>
 
+            <RadioButton
+                android:id="@+id/rbEhliyetB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B Sınıfı"
+                android:layout_marginStart="16dp"/>
+
+            <RadioButton
+                android:id="@+id/rbEhliyetC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C ve Üzeri"
+                android:layout_marginStart="16dp"/>
+        </RadioGroup>
+
+        <!-- Ek Bilgiler -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ek Bilgiler"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"/>
+
+        <!-- Engel Durumu -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Engel Durumu"/>
+
+            <Switch
+                android:id="@+id/switchEngel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
+
+        <!-- Güvenlik Kartı -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Güvenlik Kartı"/>
+
+            <Switch
+                android:id="@+id/switchGuvenlikKarti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- Şehirler Başlık -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="İkamet Şehirleri (İsteğe Bağlı)"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"/>
+
+        <!-- 1. Şehir -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Şehir"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerSehir1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvIlceLabel1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="İlçe"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerIlce1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- 2. Şehir -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. Şehir"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerSehir2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvIlceLabel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="İlçe"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerIlce2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- 3. Şehir -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. Şehir"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerSehir3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvIlceLabel3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="İlçe"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerIlce3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <!-- Kaydet Butonu -->
         <Button
@@ -63,8 +297,7 @@
             android:backgroundTint="#1565C0"
             android:textColor="#FFFFFF"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"
-            android:padding="16dp"/>
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 </ScrollView>
