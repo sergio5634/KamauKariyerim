@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity
         kullaniciEngel = prefs.getBoolean("engelDurumu", false);
         kullaniciGuvenlikKarti = prefs.getBoolean("guvenlikKarti", false);
         
-        // Şehirleri yükle
         kullaniciSehirler = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             String sehir = prefs.getString("sehir" + i, "");
@@ -189,6 +188,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    // ============================================================
+    // BU METODUN İÇİNDEKİ BÖLÜM KONTROLÜ KISMINI DEĞİŞTİRİN
+    // ============================================================
     private void ilanlariFiltrele() {
         if (tumIlanlar == null) return;
         
@@ -198,11 +200,36 @@ public class MainActivity extends AppCompatActivity
             int uyumPuani = 0;
             int toplamKriter = 0;
             
-            // Bölüm eşleşmesi (%30)
-            boolean bolumEslesiyor = ilan.getBolum().equalsIgnoreCase(kullaniciBolum) ||
-                    ilan.getBolum().equalsIgnoreCase("Herhangi bir lisans bölümü");
+            // ============================================================
+            // BÖLÜM EŞLEŞMESİ (%30) - BU KISMI DEĞİŞTİRDİM
+            // ============================================================
+            String ilanBolum = ilan.getBolum().toLowerCase();
+            String kullaniciBolumLower = kullaniciBolum.toLowerCase();
+
+            boolean bolumEslesiyor = false;
+
+            // 1. Tam eşleşme (örn: Hemşirelik == Hemşirelik)
+            if (ilanBolum.equals(kullaniciBolumLower)) {
+                bolumEslesiyor = true;
+            }
+            // 2. Herhangi lisans bölümü şartı - TÜM LİSANS MEZUNLARINA UYGUN
+            else if (ilanBolum.contains("herhangi") && ilanBolum.contains("lisans")) {
+                bolumEslesiyor = true;
+            }
+            // 3. Bölüm grubu eşleşmesi (örn: "Mühendislik" mezunları)
+            else if (ilan.getBolumGrubu() != null && !ilan.getBolumGrubu().isEmpty()) {
+                String bolumGrubu = ilan.getBolumGrubu().toLowerCase();
+                // Kullanıcı bölümü "Bilgisayar Mühendisliği" ve grup "Mühendislik" ise
+                if (kullaniciBolumLower.contains(bolumGrubu)) {
+                    bolumEslesiyor = true;
+                }
+            }
+
             if (bolumEslesiyor) uyumPuani += 30;
             toplamKriter += 30;
+            // ============================================================
+            // BÖLÜM KONTROLÜ BİTİŞ
+            // ============================================================
             
             // KPSS (%20)
             boolean kpssUygun = ilan.getKpssMinimum() <= kullaniciKpss;
@@ -249,7 +276,7 @@ public class MainActivity extends AppCompatActivity
             
             // Engel durumu şartı (bonus)
             if (ilan.isEngelDurumuSarti() && kullaniciEngel) {
-                uyumPuani += 5; // Bonus puan
+                uyumPuani += 5;
             }
             
             // Güvenlik kartı şartı
@@ -268,7 +295,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        // İstatistik güncelle
         guncelleIstatistik();
 
         Collections.sort(filtrelenmisIlanlar, (a, b) -> 
@@ -278,14 +304,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean yasKontrolu(String yasSarti, int kullaniciYas) {
-        // "18-30", "35-40" formatında
         try {
             String[] parcalar = yasSarti.split("-");
             int minYas = Integer.parseInt(parcalar[0].trim());
             int maxYas = Integer.parseInt(parcalar[1].trim());
             return kullaniciYas >= minYas && kullaniciYas <= maxYas;
         } catch (Exception e) {
-            return true; // Parse hatası varsa şartsız kabul et
+            return true;
         }
     }
 
@@ -321,19 +346,19 @@ public class MainActivity extends AppCompatActivity
         if (filtrelenmisIlanlar == null) return;
 
         switch (tip) {
-            case 0: // Uyum
+            case 0:
                 Collections.sort(filtrelenmisIlanlar, 
                     (a, b) -> Integer.compare(b.getUyumYuzdesi(), a.getUyumYuzdesi()));
                 break;
-            case 1: // Yeni
+            case 1:
                 Collections.sort(filtrelenmisIlanlar, 
                     (a, b) -> Boolean.compare(b.isYeniIlan(), a.isYeniIlan()));
                 break;
-            case 2: // Tarih
+            case 2:
                 Collections.sort(filtrelenmisIlanlar, 
                     Comparator.comparing(Ilan::getSonBasvuruTarihi));
                 break;
-            case 3: // KPSS
+            case 3:
                 Collections.sort(filtrelenmisIlanlar, 
                     (a, b) -> Double.compare(b.getKpssMinimum(), a.getKpssMinimum()));
                 break;
