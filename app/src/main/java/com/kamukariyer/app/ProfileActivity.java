@@ -1,314 +1,177 @@
 package com.kamukariyer.app;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView autoCompleteBolum;
-    private EditText etKpssPuani, etYas;
-    private RadioGroup rgEhliyet, rgCinsiyet;
-    private Switch switchEngel, switchGuvenlikKarti;
-    private Button btnKaydet;
-    private LinearLayout layoutSehirler;
+    private EditText etTakmaAd, etYas, etKpssPuani;
+    private AutoCompleteTextView spinnerCinsiyet, spinnerIl, spinnerEgitimSeviyesi, 
+                                spinnerBolum, spinnerEhliyet, spinnerKpssTuru;
+    private SwitchMaterial switchEngel, switchGuvenlikKarti;
+    private Button btnProfiliKaydet;
     
-    // 3 şehir ve ilçe seçimi için
-    private Spinner[] spinnerSehirler = new Spinner[3];
-    private Spinner[] spinnerIlceler = new Spinner[3];
-    private TextView[] tvIlceLabels = new TextView[3];
+    private TextInputLayout layoutKpssPuani;
+
+    // Bölüm listeleri
+    private final String[] CINSIYETLER = {"Erkek", "Kadın"};
+    private final String[] ILLER = {"Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", 
+        "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", 
+        "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", 
+        "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", 
+        "Hatay", "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", 
+        "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", 
+        "Mardin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", 
+        "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", 
+        "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman", "Şırnak", 
+        "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"};
     
-    private String[] bolumler;
+    private final String[] EGITIM_SEVIYELERI = {"Lisans", "Önlisans", "Yüksek Lisans"};
     
-    // Şehir ve ilçe verileri
-    private Map<String, List<String>> sehirIlceMap;
-    private String[] sehirler;
+    private final String[] BOLUMLER = {
+        // Sağlık
+        "Hemşirelik", "Tıp", "Eczacılık", "Fizyoterapi ve Rehabilitasyon", "Beslenme ve Diyetetik",
+        "Sosyal Hizmetler", "Psikoloji", "Biyokimya", "Moleküler Biyoloji ve Genetik",
+        // Mühendislik
+        "Bilgisayar Mühendisliği", "Elektrik-Elektronik Mühendisliği", "İnşaat Mühendisliği",
+        "Makine Mühendisliği", "Endüstri Mühendisliği", "Yazılım Mühendisliği",
+        // İktisadi
+        "İşletme", "İktisat", "Maliye", "Muhasebe ve Denetim", "Bankacılık ve Finans",
+        // Fen-Edebiyat
+        "Matematik", "Fizik", "Kimya", "Biyoloji", "Tarih", "Coğrafya", "Felsefe", "Sosyoloji",
+        // Hukuk
+        "Hukuk",
+        // Eğitim
+        "Sınıf Öğretmenliği", "Okul Öncesi Öğretmenliği", "İngilizce Öğretmenliği",
+        // Diğer
+        "Kamu Yönetimi", "Uluslararası İlişkiler", "İletişim", "Gazetecilik"
+    };
+    
+    private final String[] EHLIYETLER = {"Yok", "A1", "A2", "B", "C", "D", "E", "F", "G", "C ve Üzeri"};
+    private final String[] KPSS_TURLERI = {"Lisans (P3)", "Lisans (P1)", "Lisans (P2)", 
+        "Önlisans (P93)", "Ortaöğretim (P94)"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        initData();
         initViews();
-        setupBolumListesi();
-        setupSehirIlceSpinners();
-        loadSavedData();
-    }
+        setupSpinners();
+        loadProfilBilgileri();
 
-    private void initData() {
-        // Şehir ve ilçe verilerini hazırla
-        sehirIlceMap = new HashMap<>();
-        
-        // İstanbul
-        sehirIlceMap.put("İstanbul", Arrays.asList(
-            "Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", 
-            "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş",
-            "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca",
-            "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih",
-            "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal",
-            "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer",
-            "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli",
-            "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"
-        ));
-        
-        // Ankara
-        sehirIlceMap.put("Ankara", Arrays.asList(
-            "Altındağ", "Ayaş", "Bala", "Beypazarı", "Çamlıdere",
-            "Çankaya", "Çubuk", "Elmadağ", "Etimesgut", "Evren",
-            "Gölbaşı", "Güdül", "Haymana", "Kahramankazan", "Kalecik",
-            "Keçiören", "Kızılcahamam", "Mamak", "Nallıhan", "Polatlı",
-            "Pursaklar", "Sincan", "Şereflikoçhisar", "Yenimahalle"
-        ));
-        
-        // İzmir
-        sehirIlceMap.put("İzmir", Arrays.asList(
-            "Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama",
-            "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli",
-            "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar",
-            "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz",
-            "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş",
-            "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"
-        ));
-        
-        sehirler = new String[]{"Seçiniz", "İstanbul", "Ankara", "İzmir"};
-        
-        // Bölümler listesi
-        bolumler = new String[]{
-            "Bilgisayar Mühendisliği", "Elektrik Mühendisliği", "Elektronik Mühendisliği",
-            "Makine Mühendisliği", "İnşaat Mühendisliği", "Endüstri Mühendisliği",
-            "İşletme", "İktisat", "Maliye", "Muhasebe", "Kamu Yönetimi",
-            "Hukuk", "Psikoloji", "Sosyoloji", "Tarih", "Coğrafya", 
-            "Türkçe Öğretmenliği", "Matematik Öğretmenliği", "Fen Bilgisi Öğretmenliği",
-            "Okul Öncesi Öğretmenliği", "Hemşirelik", "Ebelik", 
-            "Sağlık Teknikeri", "Tıbbi Laboratuvar",
-            "Gıda Mühendisliği", "Ziraat Mühendisliği", "Orman Mühendisliği",
-            "Şehir ve Bölge Planlama", "Mimarlık", "İç Mimarlık",
-            "Fizik", "Kimya", "Biyoloji", "Matematik", "İstatistik",
-            "Uluslararası İlişkiler", "Siyaset Bilimi", "İletişim", 
-            "Halkla İlişkiler", "İlahiyat", "Türk Dili ve Edebiyatı"
-        };
+        btnProfiliKaydet.setOnClickListener(v -> profiliKaydet());
     }
 
     private void initViews() {
-        autoCompleteBolum = findViewById(R.id.autoCompleteBolum);
-        etKpssPuani = findViewById(R.id.etKpssPuani);
+        etTakmaAd = findViewById(R.id.etTakmaAd);
         etYas = findViewById(R.id.etYas);
-        rgEhliyet = findViewById(R.id.rgEhliyet);
-        rgCinsiyet = findViewById(R.id.rgCinsiyet);
+        etKpssPuani = findViewById(R.id.etKpssPuani);
+        
+        spinnerCinsiyet = findViewById(R.id.spinnerCinsiyet);
+        spinnerIl = findViewById(R.id.spinnerIl);
+        spinnerEgitimSeviyesi = findViewById(R.id.spinnerEgitimSeviyesi);
+        spinnerBolum = findViewById(R.id.spinnerBolum);
+        spinnerEhliyet = findViewById(R.id.spinnerEhliyet);
+        spinnerKpssTuru = findViewById(R.id.spinnerKpssTuru);
+        
         switchEngel = findViewById(R.id.switchEngel);
         switchGuvenlikKarti = findViewById(R.id.switchGuvenlikKarti);
-        btnKaydet = findViewById(R.id.btnKaydet);
-        layoutSehirler = findViewById(R.id.layoutSehirler);
         
-        // Şehir ve ilçe view'larını bağla
-        spinnerSehirler[0] = findViewById(R.id.spinnerSehir1);
-        spinnerIlceler[0] = findViewById(R.id.spinnerIlce1);
-        tvIlceLabels[0] = findViewById(R.id.tvIlceLabel1);
-        
-        spinnerSehirler[1] = findViewById(R.id.spinnerSehir2);
-        spinnerIlceler[1] = findViewById(R.id.spinnerIlce2);
-        tvIlceLabels[1] = findViewById(R.id.tvIlceLabel2);
-        
-        spinnerSehirler[2] = findViewById(R.id.spinnerSehir3);
-        spinnerIlceler[2] = findViewById(R.id.spinnerIlce3);
-        tvIlceLabels[2] = findViewById(R.id.tvIlceLabel3);
-        
-        btnKaydet.setOnClickListener(v -> profiliKaydet());
+        btnProfiliKaydet = findViewById(R.id.btnProfiliKaydet);
+        layoutKpssPuani = findViewById(R.id.layoutKpssPuani);
     }
 
-    private void setupBolumListesi() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            this, 
-            android.R.layout.simple_dropdown_item_1line, 
-            bolumler
-        );
-        autoCompleteBolum.setAdapter(adapter);
-        autoCompleteBolum.setThreshold(1);
+    private void setupSpinners() {
+        setSpinnerAdapter(spinnerCinsiyet, CINSIYETLER);
+        setSpinnerAdapter(spinnerIl, ILLER);
+        setSpinnerAdapter(spinnerEgitimSeviyesi, EGITIM_SEVIYELERI);
+        setSpinnerAdapter(spinnerBolum, BOLUMLER);
+        setSpinnerAdapter(spinnerEhliyet, EHLIYETLER);
+        setSpinnerAdapter(spinnerKpssTuru, KPSS_TURLERI);
     }
 
-    private void setupSehirIlceSpinners() {
-        ArrayAdapter<String> sehirAdapter = new ArrayAdapter<>(
-            this, 
-            android.R.layout.simple_spinner_item, 
-            sehirler
-        );
-        sehirAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    private void setSpinnerAdapter(AutoCompleteTextView spinner, String[] items) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, 
+            android.R.layout.simple_dropdown_item_1line, items);
+        spinner.setAdapter(adapter);
+    }
+
+    private void loadProfilBilgileri() {
+        SharedPreferences prefs = getSharedPreferences("KullaniciProfili", MODE_PRIVATE);
         
-        for (int i = 0; i < 3; i++) {
-            spinnerSehirler[i].setAdapter(sehirAdapter);
-            final int index = i;
-            
-            spinnerSehirler[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String seciliSehir = sehirler[position];
-                    if (!seciliSehir.equals("Seçiniz")) {
-                        ilceleriGuncelle(index, seciliSehir);
-                        tvIlceLabels[index].setVisibility(View.VISIBLE);
-                        spinnerIlceler[index].setVisibility(View.VISIBLE);
-                    } else {
-                        tvIlceLabels[index].setVisibility(View.GONE);
-                        spinnerIlceler[index].setVisibility(View.GONE);
-                    }
-                }
-                
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-        }
+        etTakmaAd.setText(prefs.getString("takmaAd", ""));
+        etYas.setText(prefs.getString("yas", ""));
+        etKpssPuani.setText(prefs.getString("kpssPuani", ""));
+        
+        setSpinnerValue(spinnerCinsiyet, prefs.getString("cinsiyet", "Erkek"));
+        setSpinnerValue(spinnerIl, prefs.getString("il", ""));
+        setSpinnerValue(spinnerEgitimSeviyesi, prefs.getString("egitimSeviyesi", "Lisans"));
+        setSpinnerValue(spinnerBolum, prefs.getString("bolum", ""));
+        setSpinnerValue(spinnerEhliyet, prefs.getString("ehliyet", "Yok"));
+        setSpinnerValue(spinnerKpssTuru, prefs.getString("kpssTuru", "Lisans (P3)"));
+        
+        switchEngel.setChecked(prefs.getBoolean("engelDurumu", false));
+        switchGuvenlikKarti.setChecked(prefs.getBoolean("guvenlikKarti", false));
     }
 
-    private void ilceleriGuncelle(int sehirIndex, String sehir) {
-        List<String> ilceler = sehirIlceMap.get(sehir);
-        if (ilceler != null) {
-            List<String> ilceListesi = new ArrayList<>();
-            ilceListesi.add("Tüm İlçeler");
-            ilceListesi.addAll(ilceler);
-            
-            ArrayAdapter<String> ilceAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                ilceListesi
-            );
-            ilceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerIlceler[sehirIndex].setAdapter(ilceAdapter);
+    private void setSpinnerValue(AutoCompleteTextView spinner, String value) {
+        if (value != null && !value.isEmpty()) {
+            spinner.setText(value, false);
         }
     }
 
     private void profiliKaydet() {
-        String bolum = autoCompleteBolum.getText().toString().trim();
-        String kpssPuani = etKpssPuani.getText().toString().trim();
-        String yas = etYas.getText().toString().trim();
-        
-        // Ehliyet seçimi
-        int selectedEhliyetId = rgEhliyet.getCheckedRadioButtonId();
-        String ehliyet = "Yok";
-        if (selectedEhliyetId == R.id.rbEhliyetB) ehliyet = "B";
-        else if (selectedEhliyetId == R.id.rbEhliyetC) ehliyet = "C ve Üzeri";
-        
-        // Cinsiyet seçimi
-        int selectedCinsiyetId = rgCinsiyet.getCheckedRadioButtonId();
-        String cinsiyet = "Farketmez";
-        if (selectedCinsiyetId == R.id.rbErkek) cinsiyet = "Erkek";
-        else if (selectedCinsiyetId == R.id.rbKadin) cinsiyet = "Kadın";
-
         // Validasyon
-        if (bolum.isEmpty()) {
-            autoCompleteBolum.setError("Bölüm seçiniz");
+        if (etTakmaAd.getText().toString().trim().isEmpty()) {
+            etTakmaAd.setError("Takma ad gerekli");
             return;
         }
-        if (kpssPuani.isEmpty()) {
-            etKpssPuani.setError("KPSS puanınızı giriniz");
+        if (etYas.getText().toString().trim().isEmpty()) {
+            etYas.setError("Yaş gerekli");
             return;
         }
-        if (yas.isEmpty()) {
-            etYas.setError("Yaşınızı giriniz");
+        if (spinnerBolum.getText().toString().trim().isEmpty()) {
+            spinnerBolum.setError("Bölüm seçimi gerekli");
             return;
         }
 
-        // Şehir ve ilçeleri kaydet
-        List<String> seciliSehirler = new ArrayList<>();
-        List<String> seciliIlceler = new ArrayList<>();
-        
-        for (int i = 0; i < 3; i++) {
-            String sehir = spinnerSehirler[i].getSelectedItem().toString();
-            if (!sehir.equals("Seçiniz")) {
-                seciliSehirler.add(sehir);
-                String ilce = spinnerIlceler[i].getSelectedItem().toString();
-                seciliIlceler.add(ilce);
-            }
-        }
-
-        // SharedPreferences'a kaydet
         SharedPreferences prefs = getSharedPreferences("KullaniciProfili", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("bolum", bolum);
-        editor.putString("kpssPuani", kpssPuani);
-        editor.putString("yas", yas);
-        editor.putString("ehliyet", ehliyet);
-        editor.putString("cinsiyet", cinsiyet);
+        
+        editor.putString("takmaAd", etTakmaAd.getText().toString().trim());
+        editor.putString("yas", etYas.getText().toString().trim());
+        editor.putString("kpssPuani", etKpssPuani.getText().toString().trim());
+        
+        editor.putString("cinsiyet", spinnerCinsiyet.getText().toString());
+        editor.putString("il", spinnerIl.getText().toString());
+        editor.putString("egitimSeviyesi", spinnerEgitimSeviyesi.getText().toString());
+        editor.putString("bolum", spinnerBolum.getText().toString());
+        editor.putString("ehliyet", spinnerEhliyet.getText().toString());
+        editor.putString("kpssTuru", spinnerKpssTuru.getText().toString());
+        
         editor.putBoolean("engelDurumu", switchEngel.isChecked());
         editor.putBoolean("guvenlikKarti", switchGuvenlikKarti.isChecked());
         
-        // Şehir ve ilçeleri kaydet
-        editor.putString("sehir1", seciliSehirler.size() > 0 ? seciliSehirler.get(0) : "");
-        editor.putString("ilce1", seciliIlceler.size() > 0 ? seciliIlceler.get(0) : "");
-        editor.putString("sehir2", seciliSehirler.size() > 1 ? seciliSehirler.get(1) : "");
-        editor.putString("ilce2", seciliIlceler.size() > 1 ? seciliIlceler.get(1) : "");
-        editor.putString("sehir3", seciliSehirler.size() > 2 ? seciliSehirler.get(2) : "");
-        editor.putString("ilce3", seciliIlceler.size() > 2 ? seciliIlceler.get(2) : "");
+        // Şehir listesi (şimdilik tek şehir, isterseniz 3 şehir yapılabilir)
+        editor.putString("sehir1", spinnerIl.getText().toString());
         
         editor.apply();
 
-        // Bildirimlere abone ol
-        if (!bolum.isEmpty()) {
-            BildirimYoneticisi.bildirimlereAboneOl(this, bolum);
-        }
-
         Toast.makeText(this, "Profil kaydedildi!", Toast.LENGTH_SHORT).show();
-        
-        // Ana ekrana geç
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
         finish();
-    }
-
-    private void loadSavedData() {
-        SharedPreferences prefs = getSharedPreferences("KullaniciProfili", MODE_PRIVATE);
-        
-        // Önceki verileri yükle
-        String kayitliBolum = prefs.getString("bolum", "");
-        String kayitliKpss = prefs.getString("kpssPuani", "");
-        String kayitliYas = prefs.getString("yas", "");
-        String kayitliEhliyet = prefs.getString("ehliyet", "Yok");
-        String kayitliCinsiyet = prefs.getString("cinsiyet", "Farketmez");
-
-        if (!kayitliBolum.isEmpty()) {
-            autoCompleteBolum.setText(kayitliBolum);
-        }
-        if (!kayitliKpss.isEmpty()) {
-            etKpssPuani.setText(kayitliKpss);
-        }
-        if (!kayitliYas.isEmpty()) {
-            etYas.setText(kayitliYas);
-        }
-        
-        // Ehliyet radio button
-        if (kayitliEhliyet.equals("B")) {
-            rgEhliyet.check(R.id.rbEhliyetB);
-        } else if (kayitliEhliyet.equals("C ve Üzeri")) {
-            rgEhliyet.check(R.id.rbEhliyetC);
-        }
-        
-        // Cinsiyet radio button
-        if (kayitliCinsiyet.equals("Erkek")) {
-            rgCinsiyet.check(R.id.rbErkek);
-        } else if (kayitliCinsiyet.equals("Kadın")) {
-            rgCinsiyet.check(R.id.rbKadin);
-        }
-        
-        // Switch'ler
-        switchEngel.setChecked(prefs.getBoolean("engelDurumu", false));
-        switchGuvenlikKarti.setChecked(prefs.getBoolean("guvenlikKarti", false));
     }
 }
