@@ -1,122 +1,671 @@
-package com.kamukariyer.app;
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC">
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        app:elevation="4dp">
 
-public class IlanDetayActivity extends AppCompatActivity {
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:title="İlan Detayı"
+            app:titleTextColor="#1E293B" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ilan_detay);
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        Ilan ilan = (Ilan) getIntent().getSerializableExtra("ilan");
-        if (ilan == null) {
-            Toast.makeText(this, "İlan bilgisi bulunamadı", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        // View'ları bağla
-        TextView tvKurum = findViewById(R.id.tvDetayKurum);
-        TextView tvPozisyon = findViewById(R.id.tvDetayPozisyon);
-        TextView tvBolum = findViewById(R.id.tvDetayBolum);
-        TextView tvKadro = findViewById(R.id.tvDetayKadro);
-        TextView tvSehir = findViewById(R.id.tvDetaySehir);
-        TextView tvKpss = findViewById(R.id.tvDetayKpss);
-        TextView tvYas = findViewById(R.id.tvDetayYas);
-        TextView tvCinsiyet = findViewById(R.id.tvDetayCinsiyet);
-        TextView tvEhliyet = findViewById(R.id.tvDetayEhliyet);
-        TextView tvTecrube = findViewById(R.id.tvDetayTecrube);
-        TextView tvIkamet = findViewById(R.id.tvDetayIkamet);
-        TextView tvEngel = findViewById(R.id.tvDetayEngel);
-        TextView tvGuvenlik = findViewById(R.id.tvDetayGuvenlik);
-        TextView tvEldenEvrak = findViewById(R.id.tvDetayEldenEvrak);
-        TextView tvAciklama = findViewById(R.id.tvDetayAciklama);
-        TextView tvSonBasvuru = findViewById(R.id.tvDetaySonBasvuru);
-        Button btnBasvur = findViewById(R.id.btnBasvur);
-        Button btnGeri = findViewById(R.id.btnGeri);
+            <!-- Başlık Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
 
-        // Verileri doldur
-        tvKurum.setText(ilan.getKurumAdi());
-        tvPozisyon.setText(ilan.getPozisyon());
-        tvBolum.setText("Bölüm: " + ilan.getBolum());
-        tvKadro.setText("Kadro: " + ilan.getKadroTipi());
-        tvSehir.setText("Şehir: " + ilan.getSehir());
-        tvKpss.setText("KPSS Şartı: " + (ilan.getKpssMinimum() > 0 ? ilan.getKpssMinimum() + "+" : "Yok"));
-        
-        // Yaş şartı
-        if (ilan.getYasSarti() != null && !ilan.getYasSarti().isEmpty()) {
-            tvYas.setText("Yaş Şartı: " + ilan.getYasSarti());
-            tvYas.setVisibility(View.VISIBLE);
-        } else {
-            tvYas.setVisibility(View.GONE);
-        }
-        
-        // Cinsiyet şartı
-        if (ilan.getCinsiyetSarti() != null && !ilan.getCinsiyetSarti().isEmpty() && 
-            !ilan.getCinsiyetSarti().equalsIgnoreCase("Farketmez")) {
-            tvCinsiyet.setText("Cinsiyet: " + ilan.getCinsiyetSarti());
-            tvCinsiyet.setVisibility(View.VISIBLE);
-        } else {
-            tvCinsiyet.setVisibility(View.GONE);
-        }
-        
-        tvEhliyet.setText("Ehliyet: " + ilan.getEhliyetSartı());
-        tvTecrube.setText("Tecrübe: " + (ilan.getTecrubeSarti() != null ? ilan.getTecrubeSarti() : "Yok"));
-        
-        // İkamet şartı
-        if (ilan.getIkametSarti() != null && !ilan.getIkametSarti().isEmpty()) {
-            tvIkamet.setText("İkamet Şartı: " + ilan.getIkametSarti());
-            tvIkamet.setVisibility(View.VISIBLE);
-        } else {
-            tvIkamet.setVisibility(View.GONE);
-        }
-        
-        // Engel durumu şartı
-        if (ilan.isEngelDurumuSarti()) {
-            tvEngel.setText("Engel Durumu: Engelli adaylar öncelikli");
-            tvEngel.setVisibility(View.VISIBLE);
-        } else {
-            tvEngel.setVisibility(View.GONE);
-        }
-        
-        // Güvenlik kartı şartı
-        if (ilan.isGuvenlikKartiSarti()) {
-            tvGuvenlik.setText("Güvenlik Kartı: Gerekli");
-            tvGuvenlik.setVisibility(View.VISIBLE);
-        } else {
-            tvGuvenlik.setVisibility(View.GONE);
-        }
-        
-        // Elden evrak teslimi
-        if (ilan.isEldenEvrak()) {
-            tvEldenEvrak.setText("Elden Evrak Teslimi: Gerekli");
-            tvEldenEvrak.setTextColor(0xFFD32F2F); // Kırmızı
-            tvEldenEvrak.setVisibility(View.VISIBLE);
-        } else {
-            tvEldenEvrak.setVisibility(View.GONE);
-        }
-        
-        tvAciklama.setText(ilan.getAciklama());
-        tvSonBasvuru.setText("Son Başvuru: " + ilan.getSonBasvuruTarihi());
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-        // Butonlar
-        btnBasvur.setOnClickListener(v -> {
-            if (ilan.getBasvuruLinki() != null && !ilan.getBasvuruLinki().isEmpty()) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ilan.getBasvuruLinki()));
-                startActivity(browserIntent);
-            } else {
-                Toast.makeText(this, "Başvuru linki bulunamadı", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    <TextView
+                        android:id="@+id/tvKurum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kurum Adı"
+                        android:textSize="16sp"
+                        android:textColor="#64748B" />
 
-        btnGeri.setOnClickListener(v -> finish());
-    }
-}
+                    <TextView
+                        android:id="@+id/tvPozisyon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pozisyon"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E293B"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvBolum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bölüm"
+                        android:textSize="14sp"
+                        android:textColor="#2563EB"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvAciklama"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Açıklama"
+                        android:textSize="14sp"
+                        android:textColor="#64748B"
+                        android:layout_marginTop="12dp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Şartlar Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Şartlar"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E293B"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Eğitim -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Eğitim Seviyesi"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvEgitimSeviyesi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Lisans (4 Yıllık) Mezunu"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- KPSS -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="KPSS Şartı"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvKpssSarti"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Minimum 60 Puan"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Aranan Bölümler -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Aranan Bölümler"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvArananBolumler"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Herhangi Bir Bölüm"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Görev Yeri -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Görev Yeri"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvGorevYeri"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tüm Türkiye"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Yaş -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Yaş Şartı"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvYasSarti"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="18-30 Yaş Arası"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Cinsiyet -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cinsiyet"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvCinsiyet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Kadın ve Erkek"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Ehliyet -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ehliyet"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvEhliyet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ehliyet Gerekmiyor"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
+
+                    <!-- Ek Şartlar -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ek Şartlar"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvEkSartlar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Boy-Kilo Şartı"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Başvuru Tarihleri Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Başvuru Tarihleri"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E293B"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Başlangıç"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvBasvuruBaslangic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="01 Ocak 2024"
+                                android:textSize="16sp"
+                                android:textColor="#1E293B"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bitiş"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvBasvuruBitis"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="15 Ocak 2024"
+                                android:textSize="16sp"
+                                android:textColor="#DC2626"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Durum"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:id="@+id/tvKalanGunDetay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5 gün kaldı"
+                                android:textSize="16sp"
+                                android:textColor="#059669"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Linkler Kartı -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bağlantılar"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E293B"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Yayınlanma Adresi -->
+                    <LinearLayout
+                        android:id="@+id/layoutYayinlanmaAdresi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="#F1F5F9"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resmi İlan Adresi"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Detaylı bilgi için tıklayın →"
+                                android:textSize="14sp"
+                                android:textColor="#2563EB"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Başvuru Linki -->
+                    <LinearLayout
+                        android:id="@+id/layoutBasvuruLinki"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="#EFF6FF"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_send"
+                            android:tint="#2563EB" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Başvuru Adresi"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Başvuru yapmak için tıklayın →"
+                                android:textSize="14sp"
+                                android:textColor="#2563EB"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Butonlar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBasvurdum"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="Başvurdum"
+                    android:textColor="#64748B"
+                    app:backgroundTint="#F1F5F9"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBasvuruyaGit"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="2"
+                    android:layout_marginStart="12dp"
+                    android:text="Başvuruya Git"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    app:backgroundTint="#2563EB"
+                    app:cornerRadius="12dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
