@@ -13,9 +13,12 @@ public class Ilan implements Serializable {
     private double kpssMinimum;
     private String ehliyetSartı;
     private String tecrubeSarti;
-    private int yasSarti;
-    private String cinsiyetSarti;
-    private String ikametSarti; // YENİ: İkamet şartı (örn: "İstanbul, Ankara")
+    private String yasSarti;           // YENİ: "18-30", "35-40" vb.
+    private String cinsiyetSarti;      // YENİ: "Erkek", "Kadın", "Farketmez"
+    private String ikametSarti;        // YENİ: "İstanbul", "Ankara" vb.
+    private boolean eldenEvrak;        // YENİ: true/false
+    private boolean engelDurumuSarti;  // YENİ: true/false
+    private boolean guvenlikKartiSarti;// YENİ: true/false
     private String aciklama;
     private String basvuruLinki;
     private boolean yeniIlan;
@@ -24,6 +27,7 @@ public class Ilan implements Serializable {
 
     public Ilan() {}
 
+    // Getter ve Setter'lar
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -54,15 +58,23 @@ public class Ilan implements Serializable {
     public String getTecrubeSarti() { return tecrubeSarti; }
     public void setTecrubeSarti(String tecrubeSarti) { this.tecrubeSarti = tecrubeSarti; }
 
-    public int getYasSarti() { return yasSarti; }
-    public void setYasSarti(int yasSarti) { this.yasSarti = yasSarti; }
+    public String getYasSarti() { return yasSarti; }
+    public void setYasSarti(String yasSarti) { this.yasSarti = yasSarti; }
 
     public String getCinsiyetSarti() { return cinsiyetSarti; }
     public void setCinsiyetSarti(String cinsiyetSarti) { this.cinsiyetSarti = cinsiyetSarti; }
 
-    // YENİ: İkamet şartı getter/setter
     public String getIkametSarti() { return ikametSarti; }
     public void setIkametSarti(String ikametSarti) { this.ikametSarti = ikametSarti; }
+
+    public boolean isEldenEvrak() { return eldenEvrak; }
+    public void setEldenEvrak(boolean eldenEvrak) { this.eldenEvrak = eldenEvrak; }
+
+    public boolean isEngelDurumuSarti() { return engelDurumuSarti; }
+    public void setEngelDurumuSarti(boolean engelDurumuSarti) { this.engelDurumuSarti = engelDurumuSarti; }
+
+    public boolean isGuvenlikKartiSarti() { return guvenlikKartiSarti; }
+    public void setGuvenlikKartiSarti(boolean guvenlikKartiSarti) { this.guvenlikKartiSarti = guvenlikKartiSarti; }
 
     public String getAciklama() { return aciklama; }
     public void setAciklama(String aciklama) { this.aciklama = aciklama; }
