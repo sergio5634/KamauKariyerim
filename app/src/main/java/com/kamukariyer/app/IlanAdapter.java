@@ -3,189 +3,130 @@ package com.kamukariyer.app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class IlanAdapter extends RecyclerView.Adapter<IlanAdapter.IlanViewHolder> {
 
-    private List<Ilan> ilanListesi;
+    private List<Ilan> ilanlar;
     private OnIlanClickListener listener;
+    private SimpleDateFormat tarihFormat;
 
     public interface OnIlanClickListener {
         void onDetayClick(Ilan ilan);
         void onFavoriClick(Ilan ilan);
     }
 
-    public IlanAdapter(List<Ilan> ilanListesi, OnIlanClickListener listener) {
-        this.ilanListesi = ilanListesi;
+    public IlanAdapter(List<Ilan> ilanlar, OnIlanClickListener listener) {
+        this.ilanlar = ilanlar;
         this.listener = listener;
+        this.tarihFormat = new SimpleDateFormat("dd.MM.yyyy", new Locale("tr"));
+    }
+
+    public void guncelleListe(List<Ilan> yeniIlanlar) {
+        this.ilanlar = yeniIlanlar;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public IlanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.ilan_item, parent, false);
+                .inflate(R.layout.item_ilan, parent, false);
         return new IlanViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull IlanViewHolder holder, int position) {
-        Ilan ilan = ilanListesi.get(position);
-        
-        // Temel bilgiler
-        holder.tvKurumAdi.setText(ilan.getKurumAdi());
-        holder.tvPozisyon.setText(ilan.getPozisyon());
-        holder.tvKadroTipi.setText(ilan.getKadroTipi());
-        holder.tvSehir.setText(ilan.getSehir());
-        holder.tvSonBasvuru.setText("Son: " + ilan.getSonBasvuruTarihi());
-        
-        // Tablo şartları
-        holder.tvSartBolum.setText(ilan.getBolum());
-        holder.tvSartKpss.setText(ilan.getKpssMinimum() > 0 ? (int)ilan.getKpssMinimum() + "+" : "Şartsız");
-        
-        // Yaş şartı
-        if (ilan.getYasSarti() != null && !ilan.getYasSarti().isEmpty()) {
-            holder.tvSartYas.setText(ilan.getYasSarti());
-            holder.rowYas.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowYas.setVisibility(View.GONE);
-        }
-        
-        // Cinsiyet şartı
-        if (ilan.getCinsiyetSarti() != null && !ilan.getCinsiyetSarti().isEmpty() && 
-            !ilan.getCinsiyetSarti().equalsIgnoreCase("Farketmez")) {
-            holder.tvSartCinsiyet.setText(ilan.getCinsiyetSarti());
-            holder.rowCinsiyet.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowCinsiyet.setVisibility(View.GONE);
-        }
-        
-        // Ehliyet şartı
-        if (ilan.getEhliyetSartı() != null && !ilan.getEhliyetSartı().equals("Yok")) {
-            holder.tvSartEhliyet.setText(ilan.getEhliyetSartı());
-            holder.rowEhliyet.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowEhliyet.setVisibility(View.GONE);
-        }
-        
-        // Tecrübe şartı
-        if (ilan.getTecrubeSarti() != null && !ilan.getTecrubeSarti().equals("Yok")) {
-            holder.tvSartTecrube.setText(ilan.getTecrubeSarti());
-            holder.rowTecrube.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowTecrube.setVisibility(View.GONE);
-        }
-        
-        // İkamet şartı
-        if (ilan.getIkametSarti() != null && !ilan.getIkametSarti().isEmpty()) {
-            holder.tvSartIkamet.setText(ilan.getIkametSarti());
-            holder.rowIkamet.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowIkamet.setVisibility(View.GONE);
-        }
-        
-        // Engel durumu şartı
-        if (ilan.isEngelDurumuSarti()) {
-            holder.tvSartEngel.setText("Engelli adaylar öncelikli");
-            holder.rowEngel.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowEngel.setVisibility(View.GONE);
-        }
-        
-        // Güvenlik kartı şartı
-        if (ilan.isGuvenlikKartiSarti()) {
-            holder.tvSartGuvenlik.setText("Gerekli");
-            holder.rowGuvenlik.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowGuvenlik.setVisibility(View.GONE);
-        }
-        
-        // Elden evrak teslimi
-        if (ilan.isEldenEvrak()) {
-            holder.tvSartEldenEvrak.setText("Elden evrak teslimi gerekli");
-            holder.rowEldenEvrak.setVisibility(View.VISIBLE);
-        } else {
-            holder.rowEldenEvrak.setVisibility(View.GONE);
-        }
-        
-        // Uyum yüzdesi
-        holder.tvUyumYuzdesi.setText("%" + ilan.getUyumYuzdesi());
-        
-        // Uyum rengi
-        int uyumRengi;
-        if (ilan.getUyumYuzdesi() >= 80) {
-            uyumRengi = 0xFF2E7D32; // Yeşil
-        } else if (ilan.getUyumYuzdesi() >= 50) {
-            uyumRengi = 0xFFF57C00; // Turuncu
-        } else {
-            uyumRengi = 0xFFD32F2F; // Kırmızı
-        }
-        holder.tvUyumYuzdesi.setTextColor(uyumRengi);
-
-        // Yeni ilan rozeti
-        holder.tvYeniRozet.setVisibility(ilan.isYeniIlan() ? View.VISIBLE : View.GONE);
-
-        // Butonlar
-        holder.btnDetay.setOnClickListener(v -> listener.onDetayClick(ilan));
-        holder.btnFavori.setOnClickListener(v -> listener.onFavoriClick(ilan));
+        Ilan ilan = ilanlar.get(position);
+        holder.bind(ilan);
     }
 
     @Override
     public int getItemCount() {
-        return ilanListesi.size();
+        return ilanlar != null ? ilanlar.size() : 0;
     }
 
-    public void guncelleListe(List<Ilan> yeniListe) {
-        this.ilanListesi = yeniListe;
-        notifyDataSetChanged();
-    }
+    class IlanViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        TextView tvKurum, tvPozisyon, tvBolum, tvSehir, tvKadro, tvTarih, tvUyum;
+        TextView tvKpss, tvEhliyet, tvYas, tvIkamet;
+        MaterialButton btnDetay;
+        ImageButton btnFavori;
+        View viewUyumRengi;
 
-    static class IlanViewHolder extends RecyclerView.ViewHolder {
-        TextView tvKurumAdi, tvPozisyon, tvKadroTipi, tvSehir, tvSonBasvuru;
-        TextView tvSartBolum, tvSartKpss, tvSartYas, tvSartCinsiyet, tvSartEhliyet, tvSartTecrube, tvSartIkamet;
-        TextView tvSartEngel, tvSartGuvenlik, tvSartEldenEvrak, tvUyumYuzdesi, tvYeniRozet;
-        TableRow rowYas, rowCinsiyet, rowEhliyet, rowTecrube, rowIkamet, rowEngel, rowGuvenlik, rowEldenEvrak;
-        MaterialButton btnDetay, btnFavori;
-
-        public IlanViewHolder(@NonNull View itemView) {
+        IlanViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvKurumAdi = itemView.findViewById(R.id.tvKurumAdi);
+            cardView = itemView.findViewById(R.id.cardIlan);
+            tvKurum = itemView.findViewById(R.id.tvKurum);
             tvPozisyon = itemView.findViewById(R.id.tvPozisyon);
-            tvKadroTipi = itemView.findViewById(R.id.tvKadroTipi);
+            tvBolum = itemView.findViewById(R.id.tvBolum);
             tvSehir = itemView.findViewById(R.id.tvSehir);
-            tvSonBasvuru = itemView.findViewById(R.id.tvSonBasvuru);
-            
-            // Tablo şartları
-            tvSartBolum = itemView.findViewById(R.id.tvSartBolum);
-            tvSartKpss = itemView.findViewById(R.id.tvSartKpss);
-            tvSartYas = itemView.findViewById(R.id.tvSartYas);
-            tvSartCinsiyet = itemView.findViewById(R.id.tvSartCinsiyet);
-            tvSartEhliyet = itemView.findViewById(R.id.tvSartEhliyet);
-            tvSartTecrube = itemView.findViewById(R.id.tvSartTecrube);           
-            tvSartEngel = itemView.findViewById(R.id.tvSartEngel);
-            tvSartGuvenlik = itemView.findViewById(R.id.tvSartGuvenlik);
-            tvSartEldenEvrak = itemView.findViewById(R.id.tvSartEldenEvrak);
-            
-            // TableRow'lar
-            rowYas = itemView.findViewById(R.id.rowYas);
-            rowCinsiyet = itemView.findViewById(R.id.rowCinsiyet);
-            rowEhliyet = itemView.findViewById(R.id.rowEhliyet);
-            rowTecrube = itemView.findViewById(R.id.rowTecrube);
-            rowIkamet = itemView.findViewById(R.id.rowIkamet);
-            rowEngel = itemView.findViewById(R.id.rowEngel);
-            rowGuvenlik = itemView.findViewById(R.id.rowGuvenlik);
-            rowEldenEvrak = itemView.findViewById(R.id.rowEldenEvrak);
-            
-            tvUyumYuzdesi = itemView.findViewById(R.id.tvUyumYuzdesi);
-            tvYeniRozet = itemView.findViewById(R.id.tvYeniRozet);
+            tvKadro = itemView.findViewById(R.id.tvKadro);
+            tvTarih = itemView.findViewById(R.id.tvTarih);
+            tvUyum = itemView.findViewById(R.id.tvUyum);
+            tvKpss = itemView.findViewById(R.id.tvKpss);
+            tvEhliyet = itemView.findViewById(R.id.tvEhliyet);
+            tvYas = itemView.findViewById(R.id.tvYas);
+            tvIkamet = itemView.findViewById(R.id.tvIkamet);
             btnDetay = itemView.findViewById(R.id.btnDetay);
             btnFavori = itemView.findViewById(R.id.btnFavori);
+            viewUyumRengi = itemView.findViewById(R.id.viewUyumRengi);
+        }
+
+        void bind(Ilan ilan) {
+            tvKurum.setText(ilan.getKurumAdi());
+            tvPozisyon.setText(ilan.getPozisyon());
+            tvBolum.setText("Bölüm: " + ilan.getBolum());
+            tvSehir.setText("📍 " + ilan.getSehir());
+            tvKadro.setText(ilan.getKadroTipi());
+            
+            if (ilan.getSonBasvuruTarihi() != null) {
+                tvTarih.setText("Son Tarih: " + tarihFormat.format(ilan.getSonBasvuruTarihi()));
+            } else {
+                tvTarih.setText("Son Tarih: Belirtilmemiş");
+            }
+
+            // Uyum yüzdesi ve rengi
+            tvUyum.setText("%" + ilan.getUyumYuzdesi() + " Uyum");
+            int uyumRengi = getUyumRengi(ilan.getUyumYuzdesi());
+            viewUyumRengi.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), uyumRengi));
+            tvUyum.setTextColor(ContextCompat.getColor(itemView.getContext(), uyumRengi));
+
+            // Şartlar özeti
+            tvKpss.setText("KPSS: " + (ilan.getKpssMinimum() > 0 ? ilan.getKpssMinimum() : "Şartsız"));
+            tvEhliyet.setText("Ehliyet: " + ilan.getEhliyetSartı());
+            tvYas.setText(ilan.getYasSarti() != null ? "Yaş: " + ilan.getYasSarti() : "Yaş: Şartsız");
+            tvIkamet.setText(ilan.getIkametSarti() != null ? "İkamet: " + ilan.getIkametSarti() : "İkamet: Şartsız");
+
+            // Yeni ilan badge
+            if (ilan.isYeniIlan()) {
+                tvKurum.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yeni, 0);
+            } else {
+                tvKurum.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+
+            btnDetay.setOnClickListener(v -> {
+                if (listener != null) listener.onDetayClick(ilan);
+            });
+
+            btnFavori.setOnClickListener(v -> {
+                if (listener != null) listener.onFavoriClick(ilan);
+            });
+        }
+
+        private int getUyumRengi(int yuzde) {
+            if (yuzde >= 80) return android.R.color.holo_green_dark;
+            if (yuzde >= 60) return android.R.color.holo_orange_dark;
+            return android.R.color.holo_red_dark;
         }
     }
 }
