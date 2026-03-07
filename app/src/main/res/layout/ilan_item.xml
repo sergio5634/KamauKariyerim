@@ -2,11 +2,13 @@
 <androidx.cardview.widget.CardView 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardIlan"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +16,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ÜST: Kurum + Yeni Rozeti -->
+        <!-- Üst Kısım: Kurum ve Uyum -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,118 +24,105 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tvKurumAdi"
+                android:id="@+id/tvKurum"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Kurum Adı"
-                android:textColor="#1565C0"
-                android:textSize="17sp"
-                android:textStyle="bold"/>
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1E293B"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/tvYeniRozet"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="YENİ"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:background="#D32F2F"
-                android:padding="4dp 8dp"
-                android:layout_marginStart="8dp"
-                android:visibility="gone"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:id="@+id/viewUyumRengi"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="#059669"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/tvUyum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="%85 Uyum"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#059669" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- POZİSYON -->
+        <!-- Pozisyon -->
         <TextView
             android:id="@+id/tvPozisyon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pozisyon"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2563EB"
+            android:layout_marginTop="8dp" />
+
+        <!-- Bölüm -->
+        <TextView
+            android:id="@+id/tvBolum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bölüm"
+            android:textSize="14sp"
+            android:textColor="#64748B"
+            android:layout_marginTop="4dp" />
+
+        <!-- Şehir ve Kadro -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pozisyon Adı"
-            android:textColor="#333333"
-            android:textSize="15sp"
-            android:layout_marginTop="4dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <!-- 🎯 TÜM ŞARTLAR TABLOSU -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="#F5F5F5"
-            app:cardElevation="2dp">
-
-            <TableLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvSehir"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:stretchColumns="1">
+                android:text="📍 Şehir"
+                android:textSize="14sp"
+                android:textColor="#64748B" />
 
-                <!-- Bölüm -->
-                <TableRow android:paddingVertical="4dp">
-                    <TextView android:text="📚 Bölüm:" android:textStyle="bold" android:width="100dp"/>
-                    <TextView android:id="@+id/tvSartBolum" android:text="Bilgisayar Müh." android:layout_marginStart="8dp"/>
-                </TableRow>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-                <!-- KPSS -->
-                <TableRow android:paddingVertical="4dp">
-                    <TextView android:text="📝 KPSS:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartKpss" android:text="70+" android:layout_marginStart="8dp"/>
-                </TableRow>
+            <TextView
+                android:id="@+id/tvKadro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kadro"
+                android:textSize="12sp"
+                android:textColor="#2563EB"
+                android:background="#EFF6FF"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
 
-                <!-- Yaş -->
-                <TableRow android:id="@+id/rowYas" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="🎂 Yaş:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartYas" android:text="18-30" android:layout_marginStart="8dp"/>
-                </TableRow>
+        <!-- Tarih -->
+        <TextView
+            android:id="@+id/tvTarih"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Son Tarih: 01.01.2024"
+            android:textSize="13sp"
+            android:textColor="#DC2626"
+            android:layout_marginTop="8dp" />
 
-                <!-- Cinsiyet -->
-                <TableRow android:id="@+id/rowCinsiyet" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="⚤ Cinsiyet:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartCinsiyet" android:text="Erkek" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- Ehliyet -->
-                <TableRow android:id="@+id/rowEhliyet" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="🚗 Ehliyet:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartEhliyet" android:text="B" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- Tecrübe -->
-                <TableRow android:id="@+id/rowTecrube" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="💼 Tecrübe:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartTecrube" android:text="2 yıl" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- İkamet -->
-                <TableRow android:id="@+id/rowIkamet" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="🏠 İkamet:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartIkamet" android:text="İstanbul" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- Engel Durumu -->
-                <TableRow android:id="@+id/rowEngel" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="♿ Engel:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartEngel" android:text="Engelli adaylar öncelikli" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- Güvenlik Kartı -->
-                <TableRow android:id="@+id/rowGuvenlik" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="🛡️ Güv. Kartı:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartGuvenlik" android:text="Gerekli" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-                <!-- Elden Evrak -->
-                <TableRow android:id="@+id/rowEldenEvrak" android:paddingVertical="4dp" android:visibility="gone">
-                    <TextView android:text="📋 Teslim:" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvSartEldenEvrak" android:text="Elden evrak teslimi gerekli" android:textColor="#D32F2F" android:layout_marginStart="8dp"/>
-                </TableRow>
-
-            </TableLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- ALT BİLGİLER -->
+        <!-- Şartlar Özeti -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,87 +130,97 @@
             android:layout_marginTop="12dp">
 
             <TextView
-                android:id="@+id/tvKadroTipi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Memur"
-                android:textSize="12sp"
-                android:textColor="#FFFFFF"
-                android:background="#1565C0"
-                android:padding="4dp 10dp"/>
-
-            <TextView
-                android:id="@+id/tvSehir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ankara"
-                android:textSize="12sp"
-                android:textColor="#555555"
-                android:layout_marginStart="12dp"/>
-
-            <TextView
-                android:id="@+id/tvSonBasvuru"
+                android:id="@+id/tvKpss"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Son: 15.03.2024"
+                android:text="KPSS: 70"
                 android:textSize="12sp"
-                android:textColor="#D32F2F"
-                android:gravity="end"/>
+                android:textColor="#64748B"
+                android:background="#F1F5F9"
+                android:padding="6dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tvEhliyet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ehliyet: B"
+                android:textSize="12sp"
+                android:textColor="#64748B"
+                android:background="#F1F5F9"
+                android:padding="6dp"
+                android:gravity="center"
+                android:layout_marginStart="4dp" />
+
+            <TextView
+                android:id="@+id/tvYas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Yaş: 18-30"
+                android:textSize="12sp"
+                android:textColor="#64748B"
+                android:background="#F1F5F9"
+                android:padding="6dp"
+                android:gravity="center"
+                android:layout_marginStart="4dp" />
+
+            <TextView
+                android:id="@+id/tvIkamet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="İkamet: Ankara"
+                android:textSize="12sp"
+                android:textColor="#64748B"
+                android:background="#F1F5F9"
+                android:padding="6dp"
+                android:gravity="center"
+                android:layout_marginStart="4dp" />
         </LinearLayout>
 
-        <!-- UYUM YÜZDESİ ve BUTONLAR -->
+        <!-- YENİ: Evrak Teslim Bilgisi -->
+        <TextView
+            android:id="@+id/tvEvrakTeslim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Online Başvuru"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:background="#F0FDF4"
+            android:textColor="#059669"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical" />
+
+        <!-- Butonlar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="16dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvUyumYuzdesi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="%95"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="#2E7D32"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UYUM"
-                    android:textSize="10sp"
-                    android:textColor="#757575"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDetay"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="DETAY"
-                android:backgroundTint="#1565C0"/>
+                android:layout_weight="1"
+                android:text="Detayları Gör"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#2563EB"
+                app:cornerRadius="8dp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnFavori"
                 android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:text="♥"
-                android:textSize="20sp"
-                android:textColor="#D32F2F"
-                android:backgroundTint="#FFFFFF"
-                android:layout_marginStart="8dp"/>
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_save"
+                android:tint="#64748B" />
         </LinearLayout>
 
     </LinearLayout>
