@@ -1,78 +1,90 @@
 package com.kamukariyer.app;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FirebaseFirestoreHelper {
-
+    
     private static final String TAG = "FirestoreHelper";
     private static final String COLLECTION_ILANLAR = "kamuilani";
     
     private FirebaseFirestore db;
-    private Context context;
-    private IlanListener ilanListener;
-
+    private IlanListener listener;
+    private ListenerRegistration ilanListener;
+    
     public interface IlanListener {
         void onIlanlarGeldi(List<Ilan> ilanlar);
         void onYeniIlan(Ilan ilan);
         void onHata(String hata);
     }
-
-    public FirebaseFirestoreHelper(Context context, IlanListener listener) {
+    
+    public FirebaseFirestoreHelper(IlanListener listener) {
         this.db = FirebaseFirestore.getInstance();
-        this.context = context;
-        this.ilanListener = listener;
+        this.listener = listener;
     }
-
+    
+    // Tüm aktif ilanları getir
     public void aktifIlanlariGetir() {
         db.collection(COLLECTION_ILANLAR)
             .whereEqualTo("aktif", true)
-            .orderBy("sonBasvuruTarihi", Query.Direction.ASCENDING)
+            .orderBy("yayinlanmaTarihi", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
+            .addOnSuccessListener(querySnapshot -> {
                 List<Ilan> ilanlar = new ArrayList<>();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    Ilan ilan = doc.toObject(Ilan.class);
-                    ilan.setId(doc.getId());
-                    ilanlar.add(ilan);
+                for (QueryDocumentSnapshot doc : querySnapshot) {
+                    Ilan ilan = dokumaniIlanYap(doc);
+                    if (ilan != null) {
+                        ilanlar.add(ilan);
+                    }
                 }
-                ilanListener.onIlanlarGeldi(ilanlar);
-                Log.d(TAG, ilanlar.size() + " ilan çekildi");
+                if (listener != null) {
+                    listener.onIlanlarGeldi(ilanlar);
+                }
             })
             .addOnFailureListener(e -> {
-                ilanListener.onHata(e.getMessage());
-                Log.e(TAG, "Hata: " + e.getMessage());
+                Log.e(TAG, "İlanlar çekilirken hata: " + e.getMessage());
+                if (listener != null) {
+                    listener.onHata(e.getMessage());
+                }
             });
     }
-
+    
+    // Yeni ilanları dinle (real-time)
     public void yeniIlanlariDinle(String kullaniciBolum) {
-        db.collection(COLLECTION_ILANLAR)
+        // Önceki listener'ı temizle
+        if (ilanListener != null) {
+            ilanListener.remove();
+        }
+        
+        Date simdi = new Date();
+        
+        ilanListener = db.collection(COLLECTION_ILANLAR)
             .whereEqualTo("aktif", true)
+            .whereGreaterThan("yayinlanmaTarihi", simdi)
             .addSnapshotListener((snapshots, e) -> {
                 if (e != null) {
                     Log.e(TAG, "Dinleme hatası: " + e.getMessage());
                     return;
                 }
-
-                if (snapshots != null) {
-                    for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                        if (dc.getType() == DocumentChange.Type.ADDED) {
-                            Ilan yeniIlan = dc.getDocument().toObject(Ilan.class);
-                            yeniIlan.setId(dc.getDocument().getId());
-                            yeniIlan.setYeniIlan(true);
-                            
-                            // Kullanıcının bölümüne uygun mu kontrol et
-                            if (bolumEslesiyor(yeniIlan.getBolum(), kullaniciBolum)) {
-                                if (yeniMi(yeniIlan.getYayinlanmaTarihi())) {
-                                    ilanListener.onYeniIlan(yeniIlan);
-                                    sonKontrolZamaniniGuncelle();
+                
+                if (snapshots != null && !snapshots.isEmpty()) {
+                    for (QueryDocumentSnapshot doc : snapshots.getDocumentChanges()) {
+                        if (doc.getType().equals(com.google.firebase.firestore.DocumentChange.Type.ADDED)) {
+                            Ilan yeniIlan = dokumaniIlanYap(doc);
+                            if (yeniIlan != null && listener != null) {
+                                // Bölüm kontrolü - Herhangi bölüm değilse kullanıcı bölümüne bak
+                                String ilanBolum = yeniIlan.getBolum().toLowerCase();
+                                boolean bolumUyuyor = ilanBolum.contains("herhangi") || 
+                                                    ilanBolum.equalsIgnoreCase(kullaniciBolum);
+                                
+                                if (bolumUyuyor) {
+                                    listener.onYeniIlan(yeniIlan);
                                 }
                             }
                         }
@@ -80,21 +92,71 @@ public class FirebaseFirestoreHelper {
                 }
             });
     }
-
-    private boolean bolumEslesiyor(String ilanBolum, String kullaniciBolum) {
-        // Tam eşleşme veya "Herhangi bir lisans bölümü"
-        return ilanBolum.equalsIgnoreCase(kullaniciBolum) ||
-               ilanBolum.equalsIgnoreCase("Herhangi bir lisans bölümü");
+    
+    // Firestore dokümanını Ilan objesine çevir
+    private Ilan dokumaniIlanYap(QueryDocumentSnapshot doc) {
+        try {
+            Ilan ilan = new Ilan();
+            ilan.setId(doc.getId());
+            ilan.setKurumAdi(doc.getString("kurumAdi"));
+            ilan.setPozisyon(doc.getString("pozisyon"));
+            ilan.setBolum(doc.getString("bolum"));
+            ilan.setBolumGrubu(doc.getString("bolumGrubu"));
+            ilan.setKadroTipi(doc.getString("kadroTipi"));
+            ilan.setSehir(doc.getString("sehir"));
+            ilan.setAciklama(doc.getString("aciklama"));
+            ilan.setBasvuruLinki(doc.getString("basvuruLinki"));
+            
+            // YENİ: Elden evrak bilgisi
+            Boolean eldenEvrak = doc.getBoolean("eldenEvrak");
+            ilan.setEldenEvrak(eldenEvrak != null ? eldenEvrak : false);
+            ilan.setEvrakTeslimYeri(doc.getString("evrakTeslimYeri"));
+            
+            // Sayısal değerler
+            Double kpss = doc.getDouble("kpssMinimum");
+            ilan.setKpssMinimum(kpss != null ? kpss : 0);
+            
+            // Tarihler
+            if (doc.getTimestamp("sonBasvuruTarihi") != null) {
+                ilan.setSonBasvuruTarihi(doc.getTimestamp("sonBasvuruTarihi").toDate());
+            }
+            if (doc.getTimestamp("yayinlanmaTarihi") != null) {
+                ilan.setYayinlanmaTarihi(doc.getTimestamp("yayinlanmaTarihi").toDate());
+            }
+            
+            // Şartlar
+            ilan.setEhliyetSartı(doc.getString("ehliyetSartı") != null ? 
+                doc.getString("ehliyetSartı") : "Yok");
+            ilan.setYasSarti(doc.getString("yasSarti"));
+            ilan.setCinsiyetSarti(doc.getString("cinsiyetSarti"));
+            ilan.setTecrubeSarti(doc.getString("tecrubeSarti"));
+            ilan.setIkametSarti(doc.getString("ikametSarti"));
+            
+            Boolean engel = doc.getBoolean("engelDurumuSarti");
+            ilan.setEngelDurumuSarti(engel != null ? engel : false);
+            
+            Boolean guvenlik = doc.getBoolean("guvenlikKartiSarti");
+            ilan.setGuvenlikKartiSarti(guvenlik != null ? guvenlik : false);
+            
+            Boolean aktif = doc.getBoolean("aktif");
+            ilan.setAktif(aktif != null ? aktif : true);
+            
+            // Yeni ilan kontrolü (son 24 saat)
+            if (ilan.getYayinlanmaTarihi() != null) {
+                long fark = System.currentTimeMillis() - ilan.getYayinlanmaTarihi().getTime();
+                ilan.setYeniIlan(fark < 24 * 60 * 60 * 1000);
+            }
+            
+            return ilan;
+        } catch (Exception e) {
+            Log.e(TAG, "Doküman dönüştürme hatası: " + e.getMessage());
+            return null;
+        }
     }
-
-    private boolean yeniMi(long yayinlanmaTarihi) {
-        SharedPreferences prefs = context.getSharedPreferences("IlanTakip", Context.MODE_PRIVATE);
-        long sonKontrol = prefs.getLong("son_kontrol", 0);
-        return yayinlanmaTarihi > sonKontrol;
-    }
-
-    private void sonKontrolZamaniniGuncelle() {
-        SharedPreferences prefs = context.getSharedPreferences("IlanTakip", Context.MODE_PRIVATE);
-        prefs.edit().putLong("son_kontrol", System.currentTimeMillis()).apply();
+    
+    public void dinlemeyiDurdur() {
+        if (ilanListener != null) {
+            ilanListener.remove();
+        }
     }
 }
