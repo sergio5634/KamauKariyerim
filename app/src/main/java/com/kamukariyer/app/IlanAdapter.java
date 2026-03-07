@@ -58,7 +58,7 @@ public class IlanAdapter extends RecyclerView.Adapter<IlanAdapter.IlanViewHolder
     class IlanViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView tvKurum, tvPozisyon, tvBolum, tvSehir, tvKadro, tvTarih, tvUyum;
-        TextView tvKpss, tvEhliyet, tvYas, tvIkamet, tvEvrakTeslim;
+        TextView tvKpss, tvEhliyet, tvYas, tvIkamet, tvEvrakTeslim, tvKalanGun;
         MaterialButton btnDetay;
         ImageButton btnFavori;
         View viewUyumRengi;
@@ -78,6 +78,7 @@ public class IlanAdapter extends RecyclerView.Adapter<IlanAdapter.IlanViewHolder
             tvYas = itemView.findViewById(R.id.tvYas);
             tvIkamet = itemView.findViewById(R.id.tvIkamet);
             tvEvrakTeslim = itemView.findViewById(R.id.tvEvrakTeslim);
+            tvKalanGun = itemView.findViewById(R.id.tvKalanGun); // YENİ
             btnDetay = itemView.findViewById(R.id.btnDetay);
             btnFavori = itemView.findViewById(R.id.btnFavori);
             viewUyumRengi = itemView.findViewById(R.id.viewUyumRengi);
@@ -90,11 +91,18 @@ public class IlanAdapter extends RecyclerView.Adapter<IlanAdapter.IlanViewHolder
             tvSehir.setText("📍 " + ilan.getSehir());
             tvKadro.setText(ilan.getKadroTipi());
             
+            // Tarih ve kalan gün
             if (ilan.getSonBasvuruTarihi() != null) {
                 tvTarih.setText("Son Tarih: " + tarihFormat.format(ilan.getSonBasvuruTarihi()));
             } else {
                 tvTarih.setText("Son Tarih: Belirtilmemiş");
             }
+
+            // YENİ: Kalan gün gösterimi
+            tvKalanGun.setText(ilan.getKalanGunText());
+            int kalanRenk = ilan.getKalanGunRengi();
+            tvKalanGun.setTextColor(ContextCompat.getColor(itemView.getContext(), kalanRenk));
+            tvKalanGun.setBackgroundResource(R.drawable.bg_kalan_gun); // Drawable oluşturacağız
 
             // Uyum yüzdesi ve rengi
             tvUyum.setText("%" + ilan.getUyumYuzdesi() + " Uyum");
@@ -108,14 +116,12 @@ public class IlanAdapter extends RecyclerView.Adapter<IlanAdapter.IlanViewHolder
             tvYas.setText(ilan.getYasSarti() != null ? "Yaş: " + ilan.getYasSarti() : "Yaş: Şartsız");
             tvIkamet.setText(ilan.getIkametSarti() != null ? "İkamet: " + ilan.getIkametSarti() : "İkamet: Şartsız");
 
-            // YENİ: Evrak teslim bilgisi
+            // Evrak teslim bilgisi
             tvEvrakTeslim.setText(ilan.getEvrakTeslimBilgisi());
             if (ilan.isEldenEvrak()) {
                 tvEvrakTeslim.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_red_dark));
-                tvEvrakTeslim.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.transparent));
             } else {
                 tvEvrakTeslim.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_green_dark));
-                tvEvrakTeslim.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.transparent));
             }
 
             // Yeni ilan badge
